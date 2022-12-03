@@ -213,11 +213,12 @@ header_row = pn.Row(text_input, submit_button, file_download)
 
 # layout png
 input_png = pn.pane.PNG(
-    width=600, max_height=700, sizing_mode="scale_both", align="center"
+    max_width=600, max_height=600, sizing_mode="scale_both", align="center"
 )
 input_card = pn.Card(
     input_png,
-    min_width=650,
+    max_width=650,
+    max_height=650,
     sizing_mode="stretch_both",
     align="center",
     margin=(0, 25),
@@ -226,11 +227,12 @@ input_card = pn.Card(
     header_color="grey",
 )
 output_png = pn.pane.PNG(
-    width=600, max_height=700, sizing_mode="scale_both", align="center"
+    max_width=600, max_height=600, sizing_mode="scale_both", align="center"
 )
 output_card = pn.Card(
     output_png,
-    min_width=650,
+    max_width=650,
+    max_height=650,
     sizing_mode="stretch_both",
     align="center",
     margin=(0, 25),
@@ -241,8 +243,8 @@ output_card = pn.Card(
 png_row = pn.Row(
     input_card,
     output_card,
-    width=1450,
-    height=800,
+    width=1300,
+    height=700,
     align="center",
 )
 
