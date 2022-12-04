@@ -4,10 +4,10 @@ into the center of a larger canvas.
 """
 
 from io import BytesIO
+from urllib.request import urlopen
 
 import numpy as np
 import panel as pn
-import requests
 from PIL import Image, ImageColor
 
 RAW_CSS = """
@@ -79,7 +79,7 @@ pn.extension(sizing_mode="stretch_width", raw_css=[RAW_CSS], notifications=True)
 def squarify_image(image: Image) -> Image:
     """Expands canvas so that the output image is a square."""
     width, height = image.size
-    input_card.title = f"Input Resolution: {width}x{height}"
+    input_card.title = f"Input resolution: {width}x{height}"
 
     max_size = max(width, height)
     max_static_text.value = max_size
@@ -87,7 +87,7 @@ def squarify_image(image: Image) -> Image:
     if max_size < desired_size:
         size_spinner.value = max_size
         desired_size = max_size
-    output_card.title = f"Output Resolution: {desired_size}x{desired_size}"
+    output_card.title = f"Output resolution: {desired_size}x{desired_size}"
 
     center_x = (max_size - width) // 2
     center_y = (max_size - height) // 2
@@ -154,8 +154,8 @@ def process_url(_):
     output_png.loading = True
     try:
         url = text_input.value_input
-        response = requests.get(url)
-        image_content = response.content
+        with urlopen(url) as response:
+            image_content = response.read()
 
         with BytesIO(image_content) as input_buf:
             image = Image.open(input_buf)
@@ -250,17 +250,17 @@ png_row = pn.Row(
 
 # layout settings
 size_spinner = pn.widgets.Spinner(
-    name="Desired output size [px]", margin=(0, 10), value=500
+    name="Desired download output size [px]", margin=(0, 10), value=500
 )
 max_static_text = pn.widgets.StaticText(name="Max image size [px]", value="N/A")
 color_picker = pn.widgets.ColorPicker(
-    name="Input background color", margin=(0, 10), value="#FFFFFF", disabled=True
+    name="Desired color to make transparent", margin=(0, 10), value="#FFFFFF", disabled=True
 )
 transparency_checkbox = pn.widgets.Checkbox(
     name="Make background transparent", margin=(10, 10), align="center"
 )
 detect_checkbox = pn.widgets.Checkbox(
-    name="Auto-detect background color", margin=(10, 10), align="center", disabled=True
+    name="Auto-detect color", margin=(10, 10), align="center", disabled=True
 )
 match_checkbox = pn.widgets.Checkbox(
     name="Match color exactly", margin=(10, 0), disabled=True
